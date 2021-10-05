@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class User extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -12,10 +12,6 @@ class UserResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-
-    // public static $wrap = 'dataaaa';
-
-
     public function toArray($request)
     {
         return [

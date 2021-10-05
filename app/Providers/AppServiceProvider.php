@@ -3,6 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Http\Resources\Json\JsonResource; 
+
+use App\Http\Resources\UserResource;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // UserResource::withoutWrapping();
+        // JsonResource::withoutWrapping();
+
     }
 }

@@ -21,10 +21,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
-    public function index(){
-        //need to add filter
-        return UserResource::collection(User::paginate(4));
-    }
     public function login(Request $request){
         if(Auth::attempt([
             'email' => $request->email,
@@ -40,9 +36,65 @@ class UserController extends Controller
         }
     }
 
-    public function view(Request $request, $id){
-        $user = User::find($id);
-        return $user;
+   
+    public function indesx(Request $request)
+    {
+        $users = User::all()->filter();;
+        $collection =  UserResource::collection(User::paginate(10));
+
+        return $collection;
+
+    }
+
+    public function index(Request $request)
+    {
+        // $users = User::all()->filter();
+        $collection =  UserResource::collection(User::all());
+
+        if ($request->has('email'))
+        {
+            return $collection->where('email',  $request->input('email'));
+        }
+        if($request->has('name'))
+        {
+            return $collection->where('name',  $request->input('name'));
+        }
+      
+        return $collection->paginate(1);
+
+    }
+
+
+  
+    public function store(UserRequest $request)
+    {
+        $validated = $request->validated();
+        $data = $validated;
+        $data['password'] = bcrypt($data['password']);
+        $user = User::create($data);
+
+        // return response()->json($user, 201);
+        return response(['user' => new UserResource($user), 'message' => 'Created successfully'], 201);
+    }
+
+  
+    public function show(User $user)
+    {
+        return response(['user' => new UserResource($user), 'message' => 'Retrieved successfully'], 200);
+    }
+
+   
+    // public function update(Request $request, User $user)
+    // {
+    //     $user->update($request->all());
+    //     return response(['users' => new UserResource($user), 'message' => 'Update successfully'], 200);
+    // }
+
+   
+    public function destroy(User $user)
+    {
+        $users->delete();
+        return response(['message' => 'Deleted']);
     }
 
     public function Update(EditRequest $request, $id){
@@ -60,20 +112,6 @@ class UserController extends Controller
         // $request->user()->token()->revoke();
 
         return response()->json($result, 201);
-    }
-
-    public function destroy(Request $request, $id)
-    {
-        $user = User::destroy($id);
-        return response()->json(null, 204);
-    }
-    public function create(UserRequest $request){
-        $validated = $request->validated();
-        $data = $validated;
-        $data['password'] = bcrypt($data['password']);
-        $user = User::create($data);
-
-        return response()->json($user, 201);
     }
 
     public function import() 
