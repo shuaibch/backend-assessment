@@ -37,30 +37,22 @@ class UserController extends Controller
     }
 
    
-    public function indesx(Request $request)
-    {
-        $users = User::all()->filter();;
-        $collection =  UserResource::collection(User::paginate(10));
-
-        return $collection;
-
-    }
 
     public function index(Request $request)
     {
-        // $users = User::all()->filter();
-        $collection =  UserResource::collection(User::all());
-
+        $users = User::paginate(10);
+        $collection =  UserResource::collection($users);
         if ($request->has('email'))
         {
+            // return $collection->where('email', 'like', '%' . $request->input('email') . '%');
             return $collection->where('email',  $request->input('email'));
         }
         if($request->has('name'))
         {
+            // return $collection->where('name', 'like', '%' . $request->input('name') . '%');
             return $collection->where('name',  $request->input('name'));
         }
-      
-        return $collection->paginate(1);
+        return $users;
 
     }
 
@@ -72,7 +64,6 @@ class UserController extends Controller
         $data = $validated;
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
-
         // return response()->json($user, 201);
         return response(['user' => new UserResource($user), 'message' => 'Created successfully'], 201);
     }
@@ -84,12 +75,6 @@ class UserController extends Controller
     }
 
    
-    // public function update(Request $request, User $user)
-    // {
-    //     $user->update($request->all());
-    //     return response(['users' => new UserResource($user), 'message' => 'Update successfully'], 200);
-    // }
-
    
     public function destroy(User $user)
     {
@@ -116,13 +101,9 @@ class UserController extends Controller
 
     public function import() 
     {
-        Excel::import(new UsersImport,request()->file('file'));
+        return Excel::import(new UsersImport,request()->file('file'));
         // $array = Excel::toArray(new UsersImport, request()->file('file'));
-
-
-
-        return $array;
-
+        // return $array;
     }
 
     public function export() 

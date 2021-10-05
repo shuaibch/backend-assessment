@@ -3,11 +3,12 @@
 namespace App\Imports;
 
 use App\User;
-use Maatwebsite\Excel\Concerns\ToCollection ;
-use Maatwebsite\Excel\Concerns\WithUpserts;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToModel;
 
 
-class UsersImport implements ToCollection
+
+class UsersImport implements ToModel
 {
     /**
     * @param array $row
@@ -24,23 +25,30 @@ class UsersImport implements ToCollection
     //     ]);
     // }
 
-    public function collection(Collection $rows)
+    public function model(array $row)
     {
-        foreach ($rows as $row) 
-        {
-            User::updateOrCreate(
-                [
-                    'id' => $row[0],
-                    'name' => $row[1],
-                    'email' => $row[2],
-                    'password' => bcrypt($row[3]),
-                ]
-            );
-        }
+        // foreach ($rows as $row) 
+        // {
+        //     User::updateOrCreate(
+        //         [
+        //             'id' => $row[0],
+        //             'name' => $row[1],
+        //             'email' => $row[2],
+        //             'password' => bcrypt($row[3]),
+        //         ]
+        //     );
+        // }
+
+        return new User([
+            'id' => $row[0],
+            'name' => $row[1],
+            'email' => $row[2],
+            'password' => bcrypt($row[3]),
+        ]);
     }
 
-    public function uniqueBy()
-    {
-        return 'email';
-    }
+    // public function uniqueBy()
+    // {
+    //     return 'email';
+    // }
 }

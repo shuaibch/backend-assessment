@@ -30,7 +30,7 @@ Route::post('/login', 'UserController@login');
 // Route::middleware('auth:api')->post('/user/create', 'UserController@create');
 // Route::middleware('auth:api')->post('/user/update/{id}', 'UserController@edit');
 // Route::middleware('auth:api')->post('/user/delete/{id}', 'UserController@delete');
-// Route::middleware('auth:api')->post('/user/import', 'UserController@import');
+Route::middleware('auth:api')->post('/user/import', 'UserController@import');
 Route::get('/user/export', 'UserController@export');
 Route::apiResource('users', UserController::class)->middleware('auth:api');
 
